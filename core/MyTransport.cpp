@@ -996,10 +996,30 @@ bool transportSendWrite(const uint8_t to, MyMessage &message)
 	const uint8_t totalMsgLength = HEADER_SIZE + ( message.getSigned() ? MAX_PAYLOAD_SIZE :
 	                               message.getLength() );
 	const bool noACK = _transportConfig.passiveMode || (to == BROADCAST_ADDRESS);
+	
+	#if defined(MY_GATEWAY_FEATURE)
+	#if defined(MY_PJON)
+	if (!noACK){
+		message.setRequestEcho(false);
+	}
+	#endif
+	#endif
+	
 	// send
 	setIndication(INDICATION_TX);
 	const bool result = transportHALSend(to, &message, totalMsgLength,
 	                                     noACK);
+
+	#if defined(MY_GATEWAY_FEATURE)
+	#if defined(MY_PJON)
+		if (result){
+			message.setRequestEcho(false);
+			message.setEcho(true);
+			message.setSender(message.getDestination());
+			(void)gatewayTransportSend(message);
+		}
+	#endif
+	#endif
 
 	TRANSPORT_DEBUG(PSTR("%sTSF:MSG:SEND,%" PRIu8 "-%" PRIu8 "-%" PRIu8 "-%" PRIu8 ",s=%" PRIu8 ",c=%"
 	                     PRIu8 ",t=%" PRIu8 ",pt=%" PRIu8 ",l=%" PRIu8 ",sg=%" PRIu8 ",ft=%" PRIu8 ",st=%s:%s\n"),

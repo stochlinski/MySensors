@@ -329,9 +329,9 @@ struct PJONTools {
 			info.header &= ~PJON_PORT_BIT;
 		}
 #endif
-		if(info.rx.id == PJON_BROADCAST) {
-			info.header &= ~(PJON_ACK_REQ_BIT);
-		}
+		//if(info.rx.id == PJON_BROADCAST) {
+		//	info.header &= ~(PJON_ACK_REQ_BIT);
+		//}
 		uint16_t new_length = length + packet_overhead(info.header);
 		bool extended_length = info.header & PJON_EXT_LEN_BIT;
 		if(new_length > 15 && !(info.header & PJON_CRC_BIT)) {

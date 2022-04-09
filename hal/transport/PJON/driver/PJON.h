@@ -321,13 +321,12 @@ public:
 				}
 
 			if(i == 1) {
+				
 				mac = (data[1] & PJON_MAC_BIT);
 				if(
 				    (
 				        !_router &&
 				        ((config & PJON_MODE_BIT) && !(data[1] & PJON_MODE_BIT))
-				    ) || (
-				        (data[0] == PJON_BROADCAST) && (data[1] & PJON_ACK_REQ_BIT)
 				    ) || (
 				        (data[1] & PJON_EXT_LEN_BIT) && !(data[1] & PJON_CRC_BIT)
 				    ) || (
@@ -417,14 +416,14 @@ public:
 				}
 #endif
 
-		if(data[1] & PJON_ACK_REQ_BIT && data[0] != PJON_BROADCAST)
+		if(data[1] & PJON_ACK_REQ_BIT) 
 			if((_mode != PJON_SIMPLEX) && !_router) {
 				strategy.send_response(PJON_ACK);
 			}
 
 		parse(data, last_packet_info);
-
 #if(PJON_INCLUDE_PACKET_ID)
+		
 		if(
 		    !_router &&
 		    (last_packet_info.header & PJON_PACKET_ID_BIT) &&
@@ -640,13 +639,13 @@ public:
 		}
 		strategy.send_frame((uint8_t *)payload, length);
 		if(
-		    payload[0] == PJON_BROADCAST ||
+		    
 		    !(payload[1] & PJON_ACK_REQ_BIT) ||
 		    _mode == PJON_SIMPLEX
 		) {
 			return PJON_ACK;
 		}
-		return (strategy.receive_response() == PJON_ACK) ? PJON_ACK : PJON_FAIL;
+		return (strategy.receive_response() == PJON_ACK)? PJON_ACK : PJON_FAIL;
 	};
 
 	/* Compose and transmit a packet passing its info as parameters: */

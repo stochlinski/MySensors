@@ -42,8 +42,7 @@ bool transportSend(const uint8_t to, const void *data, const uint8_t length, con
 {
 	const char *datap = static_cast<const char *>(data);
 	char *dataToSend = const_cast<char *>(datap);
-	uint16_t res = bus.send(to, dataToSend, length,
-	                        (noACK) ? (bus.config & ~PJON_ACK_REQ_BIT) : PJON_NO_HEADER);
+	uint16_t res = bus.send(to, dataToSend, length, bus.config | PJON_PACKET_ID_BIT);
 	bus.update();
 	if(res == PJON_FAIL) {
 		PJON_DEBUG(PSTR("!PJON:SND:FAIL\n"));
