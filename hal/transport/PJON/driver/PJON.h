@@ -416,10 +416,17 @@ public:
 				}
 #endif
 
-		if(data[1] & PJON_ACK_REQ_BIT) 
+		if(data[1] & PJON_ACK_REQ_BIT && data[0] != PJON_BROADCAST) 
 			if((_mode != PJON_SIMPLEX) && !_router) {
 				strategy.send_response(PJON_ACK);
 			}
+			
+		#if defined(MY_GATEWAY_FEATURE)
+			if(data[1] & PJON_ACK_REQ_BIT) 
+				if((_mode != PJON_SIMPLEX) && !_router) {
+					strategy.send_response(PJON_ACK);
+				}
+		#endif
 
 		parse(data, last_packet_info);
 #if(PJON_INCLUDE_PACKET_ID)

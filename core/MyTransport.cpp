@@ -999,9 +999,11 @@ bool transportSendWrite(const uint8_t to, MyMessage &message)
 	
 	#if defined(MY_GATEWAY_FEATURE)
 	#if defined(MY_PJON)
+	#if defined(MY_USE_PJON_ACK_AS_ECHO)
 	if (!noACK){
 		message.setRequestEcho(false);
 	}
+	#endif
 	#endif
 	#endif
 	
@@ -1012,12 +1014,14 @@ bool transportSendWrite(const uint8_t to, MyMessage &message)
 
 	#if defined(MY_GATEWAY_FEATURE)
 	#if defined(MY_PJON)
+	#if defined(MY_USE_PJON_ACK_AS_ECHO)
 		if (result){
 			message.setRequestEcho(false);
 			message.setEcho(true);
 			message.setSender(message.getDestination());
 			(void)gatewayTransportSend(message);
 		}
+	#endif	
 	#endif
 	#endif
 
