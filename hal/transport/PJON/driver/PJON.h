@@ -422,7 +422,7 @@ public:
 			}
 			
 		#if defined(MY_GATEWAY_FEATURE)
-			if(data[1] & PJON_ACK_REQ_BIT) 
+			if(data[1] & PJON_ACK_REQ_BIT && data[0] == PJON_BROADCAST) 
 				if((_mode != PJON_SIMPLEX) && !_router) {
 					strategy.send_response(PJON_ACK);
 				}
